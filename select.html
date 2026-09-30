@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Select Your Domain</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="container">
+        <div class="panel-header">
+          <a href="login.html" class="logo">SkillForge</a>
+        </div>
+
+        <section id="domainStep" class="page-card">
+          <div class="section-header">
+            <h2>Choose your career domain</h2>
+            <p>Take a short assessment so we can personalize your roadmap.</p>
+          </div>
+          <div id="domainGrid" class="grid cols-3"></div>
+        </section>
+
+        <section id="quizStep" class="page-card" hidden>
+          <div class="section-header" style="margin-bottom: 0.8rem;">
+            <h2 id="quizTitle">Assessment</h2>
+          </div>
+          <div class="bar"><i id="quizBar" data-w="0"></i></div>
+          <div class="card soft" style="margin-top: 1rem;">
+            <h3 id="questionText" style="margin-bottom: 1rem;">Question</h3>
+            <div id="optionsList" class="option-list"></div>
+            <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+              <button id="nextQuestion" class="btn" disabled>Next</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="resultStep" class="page-card" hidden>
+          <div style="text-align: center; max-width: 560px; margin: 0 auto;">
+            <div class="avatar" style="width: 100px; height: 100px; margin: 0 auto 1rem; font-size: 2rem;">🎉</div>
+            <h2>You’re <span id="resultLevel">Beginner</span></h2>
+            <p id="resultText" class="subtitle">Your roadmap is ready.</p>
+            <a href="dashboard.html" class="btn" style="margin-top: 1rem;">Go to Dashboard</a>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireLogin();
+      if (!state) {
+        throw new Error("No user");
+      }
+
+      const domainGrid = document.getElementById("domainGrid");
+      const domainStep = document.getElementById("domainStep");
+      const quizStep = document.getElementById("quizStep");
+      const resultStep = document.getElementById("resultStep");
+      const quizTitle = document.getElementById("quizTitle");
+      const quizBar = document.getElementById("quizBar");
+      const questionText = document.getElementById("questionText");
+      const optionsList = document.getElementById("optionsList");
+      const nextQuestion = document.getElementById("nextQuestion");
+      const resultLevel = document.getElementById("resultLevel");
+      const resultText = document.getElementById("resultText");
+
+      let selectedDomain = null;
+      let assessmentQuestions = [];
+      let questionIndex = 0;
+      let answers = [];
+      let selectedOption = null;
+
+      domainGrid.innerHTML = DOMAINS.map(domain => `
+        <button class="card" style="text-align:left; border: 1px solid rgba(226,232,240,0.8);" data-domain="${domain.id}">
+          <div style="font-size: 2rem; margin-bottom: 0.6rem;">${domain.icon}</div>
+          <h3>${domain.name}</h3>
+          <p class="muted sm">${domain.desc}</p>
+          <span class="badge good">Ready</span>
+        </button>
+      `).join("");
+
+      Array.from(document.querySelectorAll("[data-domain]")).forEach(button => {
+        button.addEventListener("click", () => {
+          selectedDomain = button.dataset.domain;
+          assessmentQuestions = ASSESSMENTS[selectedDomain] || [];
+          questionIndex = 0;
+          answers = [];
+          startQuiz();
+        });
+      });
+
+      function startQuiz() {
+        domainStep.hidden = true;
+        quizStep.hidden = false;
+        resultStep.hidden = true;
+        quizTitle.textContent = `${getDomainLabel(selectedDomain)} assessment`;
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        const question = assessmentQuestions[questionIndex];
+        if (!question) return;
+
+        selectedOption = null;
+        nextQuestion.disabled = true;
+        nextQuestion.textContent = questionIndex === assessmentQuestions.length - 1 ? "Finish" : "Next";
+
+        const progress = ((questionIndex + 1) / assessmentQuestions.length) * 100;
+        quizBar.dataset.w = progress;
+        quizBar.style.width = `${progress}%`;
+        questionText.textContent = `Question ${questionIndex + 1}: ${question.q}`;
+
+        optionsList.innerHTML = question.o.map((option, index) => `
+          <button type="button" class="option" data-index="${index}">${option}</button>
+        `).join("");
+
+        Array.from(document.querySelectorAll(".option")).forEach(optionBtn => {
+          optionBtn.addEventListener("click", () => {
+            Array.from(document.querySelectorAll(".option")).forEach(item => item.classList.remove("selected"));
+            optionBtn.classList.add("selected");
+            selectedOption = Number(optionBtn.dataset.index);
+            nextQuestion.disabled = false;
+          });
+        });
+      }
+
+      nextQuestion.addEventListener("click", () => {
+        if (selectedOption === null || selectedOption === undefined) return;
+        answers.push(selectedOption);
+        questionIndex += 1;
+
+        if (questionIndex < assessmentQuestions.length) {
+          renderQuestion();
+        } else {
+          finishAssessment();
+        }
+      });
+
+      function finishAssessment() {
+        const stateNow = getState();
+        let correct = 0;
+
+        assessmentQuestions.forEach((question, index) => {
+          const isCorrect = answers[index] === question.a;
+          if (isCorrect) correct += 1;
+          setSkillScore(stateNow, question.skill, "quiz", isCorrect ? 100 : 0);
+        });
+
+        const score = Math.round((correct / assessmentQuestions.length) * 100);
+        stateNow.domain = selectedDomain;
+        stateNow.assessmentScore = score;
+        stateNow.level = score <= 40 ? "Beginner" : score <= 70 ? "Intermediate" : "Advanced";
+        applyPlacement(stateNow);
+        logActivity(stateNow, `Assessment: ${score}% (${stateNow.level})`);
+        saveState(stateNow);
+
+        resultLevel.textContent = stateNow.level;
+        resultText.textContent = `You scored ${correct}/${assessmentQuestions.length} (${score}%). Your personalized roadmap is ready.`;
+
+        quizStep.hidden = true;
+        resultStep.hidden = false;
+      }
+    </script>
+  </body>
+</html>
+

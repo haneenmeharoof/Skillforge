@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="dashboard.html" class="logo" aria-label="SkillForge home">SkillForge</a>
+
+        <button class="mobile-menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav aria-label="Main navigation" class="main-nav" id="mainNav">
+          <ul class="nav-links">
+            <li><a href="dashboard.html" class="active">Home</a></li>
+            <li><a href="roadmap.html">Roadmap</a></li>
+            <li><a href="learning.html">Learn</a></li>
+            <li><a href="games.html">Games &amp; Missions</a></li>
+            <li><a href="challenges.html">Challenges</a></li>
+            <li><a href="skillgaps.html">Skill Gap</a></li>
+            <li><a href="achievements.html">Achievements</a></li>
+            <li><a href="assistant.html">AI Assistant</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="user-section">
+            <div id="topProfile"></div>
+            <button id="logoutBtn" class="btn secondary">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-shell page-background dashboard-background">
+      <div class="container">
+        <div class="panel-header">
+          <div>
+            <h1 id="welcomeTitle">Welcome back</h1>
+            <p class="subtitle" id="welcomeSubtitle">Ready to level up your skills?</p>
+          </div>
+          <span id="domainBadge" class="badge good">Current Domain</span>
+        </div>
+
+        <section class="premium-card hero-gradient blue-glow" style="padding: 1.6rem; margin-bottom: 1.4rem;">
+          <div class="grid cols-2" style="align-items: center;">
+            <div>
+              <p class="muted sm" style="margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Current Goal</p>
+              <h2 id="goalTitle" style="font-size: clamp(2rem,3vw,2.8rem); margin-bottom: 0.5rem;">Become a Cybersecurity Expert</h2>
+              <p id="goalText" class="subtitle">Continue your personalized learning path.</p>
+            </div>
+            <div class="glass-card" style="padding: 1.1rem; background: rgba(255,255,255,0.3);">
+              <p class="muted sm" style="margin-bottom: 0.5rem;">Momentum</p>
+              <div class="value" id="heroProgressValue" style="font-size: 2.3rem; font-weight: 800; letter-spacing: -0.05em;">68%</div>
+              <div class="bar" style="margin-top: 0.7rem;"><i id="heroProgressBar" data-w="68"></i></div>
+              <div style="margin-top: 0.8rem; display: flex; gap: 0.7rem; flex-wrap: wrap;">
+                <a id="continueLearningBtn" href="learning.html" class="btn">Continue Learning</a>
+                <a href="games.html" class="btn secondary">Play Mission</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="status-grid">
+          <div class="card metric-card">
+            <span class="label">Overall Progress</span>
+            <div class="value" id="progressValue">68%</div>
+            <div class="bar"><i id="progressBar" data-w="68"></i></div>
+          </div>
+
+          <div class="card metric-card">
+            <span class="label">Current Level</span>
+            <div class="value" id="levelValue">Level 5</div>
+            <div class="sub" id="levelSub">XP 1,250</div>
+          </div>
+
+          <div class="card metric-card">
+            <span class="label">XP</span>
+            <div class="value" id="xpValue">1,250 XP</div>
+            <div class="sub" id="xpSub">Next milestone in 150 XP</div>
+          </div>
+
+          <div class="card metric-card">
+            <span class="label">Completed Skills</span>
+            <div class="value" id="skillsValue">12</div>
+            <div class="sub">Across your domain</div>
+          </div>
+        </div>
+
+        <div class="grid cols-2" style="margin-top: 1rem;">
+          <section class="card soft">
+            <div class="section-header" style="margin-bottom: 0.8rem;">
+              <h2>Continue Your Journey</h2>
+            </div>
+            <div class="challenge-card" style="padding: 1.1rem; grid-template-columns: 1fr auto;">
+              <div>
+                <p class="muted sm" id="lessonDomainTag">Cybersecurity</p>
+                <h3 id="currentLessonTitle">Network Security</h3>
+                <p class="subtitle" id="lessonProgressText">Progress: 68%</p>
+              </div>
+              <a id="lessonAction" href="learning.html" class="btn">Continue Learning</a>
+            </div>
+          </section>
+
+          <section class="card soft">
+            <div class="section-header" style="margin-bottom: 0.8rem;">
+              <h2>Daily Challenge</h2>
+            </div>
+            <div class="challenge-card" style="padding: 1.1rem;">
+              <div>
+                <p class="muted sm">Difficulty: Medium</p>
+                <h3>Can you identify the vulnerability in this scenario?</h3>
+              </div>
+              <div style="text-align: right;">
+                <div class="badge good">+50 XP</div>
+                <div style="margin-top: 0.8rem;"><a href="transcripts.html" class="btn">Start Challenge</a></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="grid cols-2" style="margin-top: 1.6rem;">
+          <section class="card soft">
+            <div class="section-header" style="margin-bottom: 0.8rem;">
+              <h2>Your Skill Gaps</h2>
+            </div>
+            <div id="skillGapSummary" class="skill-gap-list"></div>
+            <div style="margin-top: 1rem;"><a href="skillgaps.html" class="btn secondary">Improve Skills</a></div>
+          </section>
+
+          <section class="card soft">
+            <div class="section-header" style="margin-bottom: 0.8rem;">
+              <h2>Personalized Roadmap</h2>
+            </div>
+            <div id="roadmapSummary" class="roadmap-grid"></div>
+          </section>
+        </div>
+
+        <section class="card soft" style="margin-top: 1.6rem;">
+          <div class="section-header" style="margin-bottom: 0.8rem;">
+            <h2>Achievements</h2>
+          </div>
+          <div id="achievementPreview" class="badge-grid"></div>
+        </section>
+      </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireLogin();
+      if (!state || !state.domain) {
+        window.location.href = "select.html";
+      }
+
+      renderTopProfile(state);
+
+      const domain = DOMAINS.find(item => item.id === state.domain) || DOMAINS[0];
+      const roadmap = ROADMAPS[state.domain] || [];
+      const currentStage = roadmap.find(stage => !state.completed.includes(stage.id)) || roadmap[roadmap.length - 1];
+      const gapData = getSkillGapData(state);
+      const totalSkillCount = gapData.length ? gapData.filter(item => item.score > 0).length : 0;
+
+      document.getElementById("welcomeTitle").textContent = `Welcome back, ${state.user.name} 👋`;
+      document.getElementById("welcomeSubtitle").textContent = "Ready to level up your skills?";
+      document.getElementById("domainBadge").textContent = domain.name;
+      document.getElementById("goalTitle").textContent = `Become a ${domain.name} Expert`;
+      document.getElementById("goalText").textContent = `Your current focus is ${currentStage ? currentStage.title : "a new milestone"}.`;
+      const progressPct = overallProgress(state);
+      document.getElementById("progressValue").textContent = `${progressPct}%`;
+      document.getElementById("progressBar").dataset.w = progressPct;
+      document.getElementById("heroProgressValue").textContent = `${progressPct}%`;
+      document.getElementById("heroProgressBar").dataset.w = progressPct;
+      document.getElementById("levelValue").textContent = `Level ${levelInfo(state.xp).num}`;
+      document.getElementById("levelSub").textContent = `${state.xp} XP earned`;
+      document.getElementById("xpValue").textContent = `${state.xp} XP`;
+      const nextMilestone = levelInfo(state.xp).xpNeeded || 0;
+      document.getElementById("xpSub").textContent = nextMilestone ? `Next milestone in ${nextMilestone} XP` : "Max level reached";
+      document.getElementById("skillsValue").textContent = String(totalSkillCount);
+      document.getElementById("lessonDomainTag").textContent = domain.name;
+      document.getElementById("currentLessonTitle").textContent = currentStage ? currentStage.title : "Start your next lesson";
+      document.getElementById("lessonProgressText").textContent = `Progress: ${overallProgress(state)}%`;
+      document.getElementById("continueLearningBtn").href = currentStage ? `learning.html?stage=${currentStage.id}` : "learning.html";
+      document.getElementById("lessonAction").href = currentStage ? `learning.html?stage=${currentStage.id}` : "learning.html";
+
+      document.getElementById("skillGapSummary").innerHTML = gapData.slice(0, 3).map(item => `
+        <div>
+          <div class="skill-row">
+            <div>
+              <div class="meta"><strong>${item.skill}</strong> <span class="badge ${item.status.cls || "good"}">${item.status.label}</span></div>
+              <div class="bar"><i data-w="${item.score}"></i></div>
+            </div>
+            <strong>${item.score}%</strong>
+          </div>
+        </div>
+      `).join("");
+
+      document.getElementById("roadmapSummary").innerHTML = roadmap.slice(0, 4).map((stage, index) => {
+        const status = stageStatus(state, roadmap.findIndex(item => item.id === stage.id));
+        const stageLabel = status === "done" ? "✓" : status === "current" ? "→" : "🔒";
+        return `
+          <div class="roadmap-item ${status}">
+            <div class="roadmap-dot">${stageLabel}</div>
+            <div class="card" style="padding: 0.9rem 1rem;">
+              <strong>${stage.title}</strong>
+              <div class="muted sm">${stage.time}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("achievementPreview").innerHTML = BADGES.map(badge => {
+        const unlocked = state.badges.includes(badge.id);
+        return `
+          <div class="badge-card ${unlocked ? "unlocked" : "locked"}">
+            <div style="font-size: 2rem;">${badge.icon}</div>
+            <h4>${badge.name}</h4>
+            <p class="muted sm">${badge.desc}</p>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        clearSession();
+        window.location.href = "login.html";
+      });
+
+      const mobileToggle = document.querySelector(".mobile-menu-toggle");
+      const mainNav = document.getElementById("mainNav");
+      if (mobileToggle && mainNav) {
+        mobileToggle.addEventListener("click", () => {
+          const isOpen = mainNav.classList.toggle("open");
+          mobileToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+      }
+
+      animateBars();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Games & Missions</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="page-background">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="dashboard.html" class="logo">SkillForge</a>
+
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="roadmap.html">Roadmap</a></li>
+            <li><a href="learning.html">Learn</a></li>
+            <li><a href="games.html" class="active">Games &amp; Missions</a></li>
+            <li><a href="challenges.html">Challenges</a></li>
+            <li><a href="skillgaps.html">Skill Gaps</a></li>
+            <li><a href="achievements.html">Achievements</a></li>
+            <li><a href="assistant.html">AI Assistant</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <div id="topProfile"></div>
+          <button id="logoutBtn" class="btn secondary">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <div class="container">
+        <section class="premium-card hero-gradient blue-glow" style="padding: 1.6rem; margin-bottom: 1.2rem;">
+          <div class="grid cols-2" style="align-items: center;">
+            <div>
+              <p class="muted sm" style="text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">SkillForge Challenge Arena</p>
+              <h1 style="font-size: clamp(2.4rem,4vw,4rem); margin-bottom: 0.4rem;">Games &amp; Missions</h1>
+              <p class="subtitle">Learn by solving. Earn XP. Master your skills.</p>
+            </div>
+            <div class="glass-card" style="padding: 1.2rem;">
+              <div class="grid cols-2" style="gap: 0.8rem;">
+                <div class="card soft" style="padding: 1rem;">
+                  <div class="muted sm">Current XP</div>
+                  <div class="value" id="xpStat">0 XP</div>
+                </div>
+                <div class="card soft" style="padding: 1rem;">
+                  <div class="muted sm">Current Level</div>
+                  <div class="value" id="levelStat">Level 1</div>
+                </div>
+                <div class="card soft" style="padding: 1rem;">
+                  <div class="muted sm">Challenges Completed</div>
+                  <div class="value" id="challengeStat">0</div>
+                </div>
+                <div class="card soft" style="padding: 1rem;">
+                  <div class="muted sm">Best Streak</div>
+                  <div class="value" id="streakStat">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="premium-card" style="padding: 1.4rem; margin-bottom: 1.2rem;">
+          <div class="section-header" style="margin-bottom: 0.8rem;">
+            <h2>Mini Games</h2>
+          </div>
+
+          <div class="game-grid">
+            <div class="game-card" id="cyberDetectiveCard">
+              <div class="game-meta">
+                <h3>Cyber Detective</h3>
+                <span class="score-pill">+80 XP</span>
+              </div>
+              <p class="muted">You are a junior security analyst investigating a suspicious email.</p>
+              <div class="game-choices" id="cyberClues"></div>
+              <div class="game-actions">
+                <button id="cyberCheckBtn" class="btn">Analyze Email</button>
+              </div>
+              <div id="cyberResult" class="answer-panel" style="display:none; margin-top: 1rem;"></div>
+            </div>
+
+            <div class="game-card">
+              <div class="game-meta">
+                <h3>Phishing or Safe?</h3>
+                <span class="score-pill">+20 XP</span>
+              </div>
+              <p id="phishQuestion" class="muted">Round 1 / 5</p>
+              <h4 id="phishPrompt" style="margin-bottom: 0.8rem;">Your bank account will be suspended in 30 minutes. Click here immediately.</h4>
+              <div class="game-choices" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
+                <button data-answer="phishing" class="phish-btn">🚨 Phishing</button>
+                <button data-answer="safe" class="phish-btn">✅ Safe</button>
+              </div>
+              <div id="phishResult" class="answer-panel" style="display:none; margin-top: 1rem;"></div>
+            </div>
+
+            <div class="game-card">
+              <div class="game-meta">
+                <h3>Security Sort</h3>
+                <span class="score-pill">+50 XP</span>
+              </div>
+              <div class="sort-grid" id="sortGrid"></div>
+              <div id="sortResult" class="answer-panel" style="display:none; margin-top: 1rem;"></div>
+            </div>
+
+            <div class="game-card">
+              <div class="game-meta">
+                <h3>Code Detective</h3>
+                <span class="score-pill">+40 XP</span>
+              </div>
+              <p class="muted">What security issue should you investigate?</p>
+              <pre style="padding: 0.8rem; background: rgba(15,23,42,0.04); border-radius: 12px; overflow:auto;">SELECT * FROM users WHERE username = 'USER_INPUT';</pre>
+              <div class="game-choices">
+                <button class="code-btn" data-answer="sql">SQL Injection</button>
+                <button class="code-btn" data-answer="xss">XSS</button>
+                <button class="code-btn" data-answer="ddos">DDoS</button>
+                <button class="code-btn" data-answer="dns">DNS Spoofing</button>
+              </div>
+              <div id="codeResult" class="answer-panel" style="display:none; margin-top: 1rem;"></div>
+            </div>
+
+            <div class="game-card" style="grid-column: 1 / -1;">
+              <div class="game-meta">
+                <h3>Network Puzzle</h3>
+                <span class="score-pill">+60 XP</span>
+              </div>
+              <div class="match-grid" id="matchGrid"></div>
+              <div id="matchResult" class="answer-panel" style="display:none; margin-top: 1rem;"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="premium-card" style="padding: 1.4rem;">
+          <div class="section-header" style="margin-bottom: 0.7rem;">
+            <h2>Real-World Missions</h2>
+          </div>
+          <div class="mission-grid" id="missionGrid"></div>
+        </section>
+      </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireDomain();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderTopProfile(state);
+        const xpStat = document.getElementById("xpStat");
+        const levelStat = document.getElementById("levelStat");
+        const challengeStat = document.getElementById("challengeStat");
+        const streakStat = document.getElementById("streakStat");
+
+        xpStat.textContent = `${state.xp} XP`;
+        levelStat.textContent = `Level ${levelInfo(state.xp).num}`;
+        challengeStat.textContent = String(state.challengeHistory.length);
+        streakStat.textContent = String(state.bestStreak || 0);
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          clearSession();
+          window.location.href = "login.html";
+        });
+
+        const cyberClues = [
+          { id: "sender", text: "Suspicious sender domain: @g0v-bank-security.net", correct: true },
+          { id: "subject", text: "Urgent tone: 'Your account will be locked in 30 minutes.'", correct: true },
+          { id: "link", text: "Unknown link included in the email body", correct: true },
+          { id: "attachment", text: "Unexpected attachment: .zip file", correct: true },
+          { id: "safe", text: "Signed by a well-known company with a verified account", correct: false },
+          { id: "safe2", text: "Includes a short customer support signature with an official domain", correct: false }
+        ];
+
+        const clueMarkup = document.getElementById("cyberClues");
+        clueMarkup.innerHTML = cyberClues.map(clue => `
+          <button type="button" class="clue-btn" data-correct="${clue.correct ? "1" : "0"}">${clue.text}</button>
+        `).join("");
+
+        const cyberCheckBtn = document.getElementById("cyberCheckBtn");
+        const cyberResult = document.getElementById("cyberResult");
+        const selectedClues = new Set();
+        clueMarkup.querySelectorAll(".clue-btn").forEach(button => {
+          button.addEventListener("click", () => {
+            const isCorrect = button.dataset.correct === "1";
+            if (selectedClues.has(button.textContent)) {
+              selectedClues.delete(button.textContent);
+              button.classList.remove("active");
+            } else {
+              selectedClues.add(button.textContent);
+              button.classList.toggle("active", isCorrect);
+            }
+          });
+        });
+
+        cyberCheckBtn.addEventListener("click", () => {
+          const suspiciousFound = [...selectedClues].length;
+          const score = suspiciousFound >= 3 ? 5 : suspiciousFound;
+          const success = suspiciousFound >= 3;
+          const reward = success ? 80 : 10;
+          cyberResult.style.display = "block";
+          cyberResult.className = `answer-panel ${success ? "correct" : "incorrect"}`;
+          cyberResult.innerHTML = success
+            ? `<strong>Investigation complete!</strong><p>${score}/5 clues found. The email is phishing and the account should be reported immediately.</p><p>XP earned: +${reward}</p>`
+            : `<strong>Almost there.</strong><p>Try selecting the urgent language, suspicious sender domain, unexpected attachment, and unusual link.</p><p>XP earned: +${reward}</p>`;
+          if (success) {
+            awardMission(state, "cyber-detective", reward, "Network Security");
+            saveState(state);
+          }
+        });
+
+        const phishingRounds = [
+          { prompt: "Your bank account will be suspended in 30 minutes. Click here immediately.", answer: "phishing" },
+          { prompt: "A colleague from your company asked for a quick password reset using the official portal.", answer: "safe" },
+          { prompt: "The email includes a mismatched sender domain and a file download you did not request.", answer: "phishing" },
+          { prompt: "You received a notification about a recent login from a familiar device and location.", answer: "safe" },
+          { prompt: "A message warns that a package cannot be delivered unless you enter credentials now.", answer: "phishing" }
+        ];
+
+        let phishingIndex = 0;
+        const phishQuestion = document.getElementById("phishQuestion");
+        const phishPrompt = document.getElementById("phishPrompt");
+        const phishResult = document.getElementById("phishResult");
+        const phishButtons = document.querySelectorAll(".phish-btn");
+
+        function renderPhishRound() {
+          const round = phishingRounds[phishingIndex];
+          phishQuestion.textContent = `Round ${phishingIndex + 1} / ${phishingRounds.length}`;
+          phishPrompt.textContent = round.prompt;
+          phishResult.style.display = "none";
+        }
+
+        phishButtons.forEach(button => {
+          button.addEventListener("click", () => {
+            const selected = button.dataset.answer;
+            const round = phishingRounds[phishingIndex];
+            const isCorrect = selected === round.answer;
+            const xp = isCorrect ? 20 : 5;
+            phishResult.style.display = "block";
+            phishResult.className = `answer-panel ${isCorrect ? "correct" : "incorrect"}`;
+            phishResult.innerHTML = isCorrect
+              ? `<strong>✓ Correct</strong><p>That message is ${round.answer === "phishing" ? "a phishing attempt" : "likely safe"}. It used urgency and a suspicious pattern.</p><p>+${xp} XP</p>`
+              : `<strong>Not quite.</strong><p>Look for urgency, unexpected links, and mismatch in the sender or domain before clicking.</p><p>+${xp} XP</p>`;
+            if (isCorrect) {
+              addXP(state, xp, "Phishing or Safe challenge");
+              saveState(state);
+            }
+            phishingIndex = (phishingIndex + 1) % phishingRounds.length;
+            setTimeout(renderPhishRound, 1200);
+          });
+        });
+
+        renderPhishRound();
+
+        const safeList = [
+          { label: "Firewall", value: "safe" },
+          { label: "Public Wi-Fi", value: "risky" },
+          { label: "MFA", value: "safe" },
+          { label: "Suspicious Attachment", value: "risky" },
+          { label: "Strong Password", value: "safe" },
+          { label: "Unknown USB", value: "risky" }
+        ];
+
+        const sortGrid = document.getElementById("sortGrid");
+        const sortResult = document.getElementById("sortResult");
+        let sortIndex = 0;
+        const sortButtons = [];
+
+        safeList.forEach(item => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = item.label;
+          button.addEventListener("click", () => {
+            const expected = item.value === "safe" ? "safe" : "risky";
+            const chosen = button.dataset.choice || "safe";
+            const isCorrect = expected === chosen;
+            sortResult.style.display = "block";
+            sortResult.className = `answer-panel ${isCorrect ? "correct" : "incorrect"}`;
+            sortResult.innerHTML = isCorrect
+              ? `<strong>✓ Correct</strong><p>${item.label} is ${expected === "safe" ? "safe" : "risky"}.</p><p>+20 XP</p>`
+              : `<strong>Review the risk.</strong><p>${item.label} should be treated as ${expected === "safe" ? "safe" : "risky"}.</p><p>+10 XP</p>`;
+            if (isCorrect) {
+              addXP(state, 20, `Security sort: ${item.label}`);
+              saveState(state);
+            }
+          });
+          button.dataset.choice = item.value;
+          sortGrid.appendChild(button);
+        });
+
+        document.querySelectorAll(".code-btn").forEach(button => {
+          button.addEventListener("click", () => {
+            const codeResult = document.getElementById("codeResult");
+            const answer = button.dataset.answer;
+            const isCorrect = answer === "sql";
+            codeResult.style.display = "block";
+            codeResult.className = `answer-panel ${isCorrect ? "correct" : "incorrect"}`;
+            codeResult.innerHTML = isCorrect
+              ? "<strong>✓ Correct</strong><p>That query is vulnerable to SQL injection because user input is concatenated directly into the SQL statement.</p><p>+40 XP</p>"
+              : "<strong>Think about user-controlled input.</strong><p>SQL injection happens when raw input is used in a query without validation or parameterization.</p><p>+10 XP</p>";
+            if (isCorrect) {
+              addXP(state, 40, "Code detective challenge");
+              saveState(state);
+            }
+          });
+        });
+
+        const matchPairs = [
+          { source: "DNS", target: "Domain Name Resolution" },
+          { source: "HTTPS", target: "Secure Web Communication" },
+          { source: "SSH", target: "Secure Remote Access" },
+          { source: "FTP", target: "File Transfer" },
+          { source: "DHCP", target: "IP Configuration" }
+        ];
+
+        const matchGrid = document.getElementById("matchGrid");
+        matchGrid.innerHTML = matchPairs.map(pair => `
+          <button type="button" class="match-choice" data-pair="${pair.source}">${pair.source} → ${pair.target}</button>
+        `).join("");
+
+        const matchResult = document.getElementById("matchResult");
+        matchGrid.querySelectorAll(".match-choice").forEach(button => {
+          button.addEventListener("click", () => {
+            const expected = matchPairs.find(item => item.source === button.dataset.pair);
+            const isCorrect = expected && expected.target === expected.target;
+            matchResult.style.display = "block";
+            matchResult.className = `answer-panel ${isCorrect ? "correct" : "incorrect"}`;
+            matchResult.innerHTML = isCorrect
+              ? `<strong>✓ Correct</strong><p>${button.dataset.pair} maps to ${expected.target}.</p><p>+60 XP</p>`
+              : `<strong>Almost there.</strong><p>Review the protocol-to-purpose mapping for the network fundamentals section.</p><p>+10 XP</p>`;
+            if (isCorrect) {
+              addXP(state, 60, "Network puzzle");
+              saveState(state);
+            }
+          });
+        });
+
+        const missionGrid = document.getElementById("missionGrid");
+        const missions = [
+          { id: "mission-phishing-investigation", title: "Mission 01 — Phishing Investigation", description: "An employee reports a suspicious email. Identify the warning signs and determine the correct response.", reward: 100, skill: "Network Security" },
+          { id: "mission-secure-account", title: "Mission 02 — Secure the Account", description: "Help a new employee secure their account with a strong password, MFA, and safe recovery settings.", reward: 100, skill: "Account Security" },
+          { id: "mission-network-detective", title: "Mission 03 — Network Detective", description: "Review unusual traffic and identify suspicious IPs, ports, and protocol behavior.", reward: 120, skill: "Network Security" }
+        ];
+
+        missionGrid.innerHTML = missions.map(mission => `
+          <div class="mission-card">
+            <div class="mission-meta">
+              <h3>${mission.title}</h3>
+              <span class="score-pill">+${mission.reward} XP</span>
+            </div>
+            <p class="muted">${mission.description}</p>
+            <div class="mission-actions">
+              <button type="button" class="mission-btn" data-id="${mission.id}" data-xp="${mission.reward}" data-skill="${mission.skill}" ${state.missionsCompleted.includes(mission.id) ? "disabled" : ""}>
+                ${state.missionsCompleted.includes(mission.id) ? "Completed" : "Complete Mission"}
+              </button>
+            </div>
+          </div>
+        `).join("");
+
+        missionGrid.querySelectorAll(".mission-btn").forEach(button => {
+          button.addEventListener("click", () => {
+            const id = button.dataset.id;
+            const xp = Number(button.dataset.xp);
+            const skill = button.dataset.skill;
+            if (awardMission(state, id, xp, skill)) {
+              button.textContent = "Completed";
+              button.disabled = true;
+              saveState(state);
+              xpStat.textContent = `${state.xp} XP`;
+              levelStat.textContent = `Level ${levelInfo(state.xp).num}`;
+            }
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

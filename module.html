@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Module</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="page-background">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="dashboard.html" class="logo" aria-label="SkillForge home">SkillForge</a>
+
+        <button class="mobile-menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav aria-label="Main navigation" class="main-nav" id="mainNav">
+          <ul class="nav-links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="roadmap.html">Roadmap</a></li>
+            <li><a href="learning.html" class="active">Learn</a></li>
+            <li><a href="games.html">Games &amp; Missions</a></li>
+            <li><a href="challenges.html">Challenges</a></li>
+            <li><a href="skillgaps.html">Skill Gap</a></li>
+            <li><a href="achievements.html">Achievements</a></li>
+            <li><a href="assistant.html">AI Assistant</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="user-section">
+            <div id="topProfile"></div>
+            <button id="logoutBtn" class="btn secondary">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <div class="container">
+        <div class="panel-header">
+          <div>
+            <h1 id="moduleHeader">Module</h1>
+            <p id="moduleSubtitle" class="subtitle">Explore the module and complete each lesson.</p>
+          </div>
+          <a href="learning.html" class="btn secondary">Back to Learning</a>
+        </div>
+
+        <section class="premium-card hero-gradient blue-glow" style="padding: 1.5rem; margin-bottom: 1rem;">
+          <div class="grid cols-2" style="align-items: center; margin: 0;">
+            <div>
+              <p class="muted sm" style="margin-bottom: 0.45rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Selected Module</p>
+              <h2 id="moduleTitle" style="margin-bottom: 0.35rem;">Introduction to AI</h2>
+              <p id="moduleDescription" class="subtitle">Understand the foundations of the selected domain.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+              <div class="module-progress">
+                <div style="display:flex; justify-content:space-between; gap:1rem; align-items:center;">
+                  <span class="muted sm">Module Progress</span>
+                  <strong id="moduleProgressValue">0%</strong>
+                </div>
+                <div class="bar"><i id="moduleProgressBar" data-w="0"></i></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="learning-shell" style="grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);">
+          <aside class="premium-card">
+            <h3>Lessons</h3>
+            <div id="lessonList" class="lesson-list" style="margin-top: 1rem;"></div>
+          </aside>
+
+          <section class="premium-card lesson-shell">
+            <div class="lesson-header">
+              <div>
+                <p class="muted sm" style="margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 700;">Current Lesson</p>
+                <h2 id="lessonTitle">Lesson</h2>
+              </div>
+              <span id="lessonStatus" class="badge good">Open</span>
+            </div>
+
+            <div class="lesson-meta">
+              <span class="badge" id="lessonCount">4 lessons</span>
+              <span class="badge" id="lessonDifficulty">Beginner</span>
+              <span class="badge" id="lessonTime">12 min</span>
+            </div>
+
+            <div class="lesson-body">
+              <div>
+                <h3>Summary</h3>
+                <p id="lessonSummary">Lesson summary will appear here.</p>
+              </div>
+              <div>
+                <h3>Key Idea</h3>
+                <p id="lessonExplanation">Lesson explanation will appear here.</p>
+              </div>
+              <div>
+                <h3>Example</h3>
+                <p id="lessonExample">A practical example will appear here.</p>
+              </div>
+            </div>
+
+            <div class="lesson-actions" style="display:flex; flex-wrap:wrap; gap:0.8rem; margin-top:1.4rem;">
+              <button id="previousLessonBtn" class="btn secondary" type="button">Previous</button>
+              <button id="completeLessonBtn" class="btn" type="button">Mark Lesson Complete</button>
+              <button id="nextLessonBtn" class="btn" type="button">Next Lesson</button>
+            </div>
+          </section>
+        </div>
+
+        <section id="finalTaskSection" class="premium-card" style="margin-top: 1.3rem; padding: 1.4rem; display: none;">
+          <div class="section-header" style="margin-bottom: 0.8rem;">
+            <h2>Final Practical Task</h2>
+          </div>
+          <div class="lesson-body">
+            <div>
+              <h3>Objective</h3>
+              <p id="finalTaskText">Build a final product or reflection for your domain.</p>
+            </div>
+            <div>
+              <h3>Instructions</h3>
+              <ul class="key-points">
+                <li>Review the important ideas from each module.</li>
+                <li>Apply them to a realistic task or scenario.</li>
+                <li>Write a short practical outcome and explain your reasoning.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="lesson-actions" style="display:flex; flex-wrap:wrap; gap:0.8rem; margin-top:1.2rem;">
+            <button id="completeFinalTaskBtn" class="btn" type="button">Complete Final Task</button>
+          </div>
+        </section>
+
+        <section id="finalQuizSection" class="premium-card" style="margin-top: 1.3rem; padding: 1.4rem; display: none;">
+          <div class="section-header" style="margin-bottom: 0.8rem;">
+            <h2>Final Quiz</h2>
+          </div>
+          <div id="finalQuizContent"></div>
+        </section>
+      </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireDomain();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderTopProfile(state);
+
+        const moduleParams = new URLSearchParams(window.location.search);
+        const moduleId = Number(moduleParams.get("module")) || 1;
+        const modules = getModulesForDomain(state.domain);
+        const currentModule = getModuleById(state.domain, moduleId) || modules[0];
+        const moduleKey = String(currentModule.id);
+        const moduleState = ensureModuleState(state, currentModule.id);
+
+        const lessonList = document.getElementById("lessonList");
+        const moduleHeader = document.getElementById("moduleHeader");
+        const moduleTitle = document.getElementById("moduleTitle");
+        const moduleDescription = document.getElementById("moduleDescription");
+        const moduleProgressValue = document.getElementById("moduleProgressValue");
+        const moduleProgressBar = document.getElementById("moduleProgressBar");
+        const lessonTitle = document.getElementById("lessonTitle");
+        const lessonStatus = document.getElementById("lessonStatus");
+        const lessonCount = document.getElementById("lessonCount");
+        const lessonDifficulty = document.getElementById("lessonDifficulty");
+        const lessonTime = document.getElementById("lessonTime");
+        const lessonSummary = document.getElementById("lessonSummary");
+        const lessonExplanation = document.getElementById("lessonExplanation");
+        const lessonExample = document.getElementById("lessonExample");
+        const finalTaskSection = document.getElementById("finalTaskSection");
+        const finalQuizSection = document.getElementById("finalQuizSection");
+        const finalTaskText = document.getElementById("finalTaskText");
+
+        moduleHeader.textContent = `Module ${currentModule.id}`;
+        moduleTitle.textContent = currentModule.title;
+        moduleDescription.textContent = currentModule.description;
+        lessonCount.textContent = `${currentModule.lessons.length} lessons`;
+        lessonDifficulty.textContent = currentModule.level || "Intermediate";
+        lessonTime.textContent = `${currentModule.lessons.length * 12} min`;
+
+        let activeLessonIndex = 0;
+
+        function getProgress() {
+          const completed = Array.isArray(moduleState.lessonsCompleted) ? moduleState.lessonsCompleted : [];
+          const total = currentModule.lessons.length;
+          const percent = total ? Math.round((completed.length / total) * 100) : 0;
+          return { completed, total, percent };
+        }
+
+        function updateModuleProgressUI() {
+          const { completed, total, percent } = getProgress();
+          moduleProgressValue.textContent = `${percent}%`;
+          moduleProgressBar.dataset.w = String(percent);
+          moduleState.completed = completed.length >= total;
+          if (!state.modules[moduleKey]) state.modules[moduleKey] = moduleState;
+          saveState(state);
+        }
+
+        function renderLessons() {
+          const { completed } = getProgress();
+          lessonList.innerHTML = currentModule.lessons.map((lesson, index) => {
+            const isCompleted = completed.includes(index);
+            const isCurrent = index === activeLessonIndex;
+            let label = "Upcoming";
+            let icon = "○";
+            let itemClass = "locked";
+
+            if (isCompleted) {
+              label = "Completed";
+              icon = "✓";
+              itemClass = "completed";
+            } else if (isCurrent || index <= activeLessonIndex) {
+              label = "Open";
+              icon = "→";
+              itemClass = "";
+            }
+
+            return `
+              <button type="button" class="lesson-item ${itemClass}" data-index="${index}">
+                <div class="lesson-main">
+                  <span class="lesson-icon">${icon}</span>
+                  <div>
+                    <div class="lesson-title">Lesson ${index + 1}: ${lesson.title}</div>
+                    <div class="lesson-meta-text">${lesson.summary}</div>
+                  </div>
+                </div>
+                <span class="lesson-action">${label}</span>
+              </button>
+            `;
+          }).join("");
+
+          lessonList.querySelectorAll(".lesson-item").forEach(button => {
+            button.addEventListener("click", () => {
+              activeLessonIndex = Number(button.dataset.index);
+              renderLessonContent();
+            });
+          });
+        }
+
+        function renderLessonContent() {
+          const lesson = currentModule.lessons[activeLessonIndex];
+          const { completed } = getProgress();
+          const isCompleted = completed.includes(activeLessonIndex);
+
+          lessonTitle.textContent = `Lesson ${activeLessonIndex + 1}: ${lesson.title}`;
+          lessonSummary.textContent = lesson.summary;
+          lessonExplanation.textContent = lesson.explanation || `This lesson focuses on the core ideas behind ${lesson.title.toLowerCase()} and how they support your overall learning path.`;
+          lessonExample.textContent = lesson.example || `Apply ${lesson.title.toLowerCase()} in a realistic scenario to improve decision-making and execution.`;
+          lessonStatus.textContent = isCompleted ? "Completed" : "Open";
+          lessonStatus.className = `badge ${isCompleted ? "good" : "warn"}`;
+          renderLessons();
+        }
+
+        function markCurrentLessonComplete() {
+          const { completed } = getProgress();
+          if (!completed.includes(activeLessonIndex)) {
+            completed.push(activeLessonIndex);
+            moduleState.lessonsCompleted = completed;
+            moduleState.completed = completed.length >= currentModule.lessons.length;
+            markLessonComplete(state, `${currentModule.id}:${activeLessonIndex}`);
+          }
+          updateModuleProgressUI();
+          renderLessonContent();
+
+          if (currentModule.id === 5 && completed.length >= currentModule.lessons.length) {
+            finalTaskSection.style.display = "block";
+            finalQuizSection.style.display = "block";
+          }
+        }
+
+        document.getElementById("previousLessonBtn").addEventListener("click", () => {
+          activeLessonIndex = Math.max(0, activeLessonIndex - 1);
+          renderLessonContent();
+        });
+
+        document.getElementById("nextLessonBtn").addEventListener("click", () => {
+          markCurrentLessonComplete();
+          if (activeLessonIndex < currentModule.lessons.length - 1) {
+            activeLessonIndex += 1;
+            renderLessonContent();
+          }
+          if (currentModule.id === 5 && getProgress().completed.length >= currentModule.lessons.length) {
+            finalTaskSection.style.display = "block";
+            finalQuizSection.style.display = "block";
+          }
+        });
+
+        document.getElementById("completeLessonBtn").addEventListener("click", () => {
+          markCurrentLessonComplete();
+        });
+
+        const finalQuestionSet = [
+          {
+            question: "Which idea is most important for building confidence in a learning path?",
+            options: ["Skipping the hard parts", "Reviewing and improving weak areas", "Avoiding practice", "Only focusing on quick wins"],
+            answer: 1,
+            explanation: "Strengthening weak spots is the best way to learn effectively and build confidence."
+          },
+          {
+            question: "Why are practical tasks useful in a learning platform?",
+            options: ["They replace all theory", "They help you apply concepts to real work", "They remove the need for quizzes", "They are only for advanced learners"],
+            answer: 1,
+            explanation: "Practical tasks connect theory to action and improve real-world problem solving."
+          },
+          {
+            question: "What is the best mindset for completing a final module?",
+            options: ["Treat it as a checklist of actions only", "Use the concepts to solve a realistic problem and reflect on the outcome", "Ignore the final task", "Move on without review"],
+            answer: 1,
+            explanation: "The goal is to synthesize your learning and apply it to a realistic task."
+          }
+        ];
+
+        document.getElementById("completeFinalTaskBtn").addEventListener("click", () => {
+          state.finalTaskCompleted = true;
+          saveState(state);
+          const actionWrap = document.querySelector("#finalTaskSection .lesson-actions");
+          if (actionWrap) actionWrap.innerHTML = '<span class="badge good">Task Completed</span>';
+        });
+
+        if (currentModule.id === 5) {
+          finalTaskSection.style.display = "block";
+          finalQuizSection.style.display = "block";
+          finalTaskText.textContent = state.domain === "ai"
+            ? "Create a short AI strategy for a real business problem, describe the workflow, and explain how you would evaluate it."
+            : "Create a practical domain plan for a realistic scenario using the ideas from the earlier modules and explain the reasoning behind your approach.";
+
+          const quizContent = document.getElementById("finalQuizContent");
+          quizContent.innerHTML = `
+            <div class="option-list" style="margin-top:0.8rem;">
+              ${finalQuestionSet.map((q, index) => `
+                <div class="premium-card" style="padding:1rem; background: rgba(239,246,255,0.7); margin-bottom: 1rem;">
+                  <h3>Question ${index + 1}</h3>
+                  <p style="margin-bottom:0.8rem;">${q.question}</p>
+                  <div class="option-list">
+                    ${q.options.map((option, optionIndex) => `
+                      <button type="button" class="option" data-question="${index}" data-answer="${optionIndex}">${option}</button>
+                    `).join("")}
+                  </div>
+                </div>
+              `).join("")}
+              <button id="submitFinalQuizBtn" class="btn" type="button" style="margin-top: 1rem;">Submit Final Quiz</button>
+            </div>
+          `;
+
+          quizContent.querySelectorAll(".option").forEach(button => {
+            button.addEventListener("click", () => {
+              const questionIndex = Number(button.dataset.question);
+              const answerIndex = Number(button.dataset.answer);
+              const group = quizContent.querySelectorAll(`.option[data-question="${questionIndex}"]`);
+              group.forEach(item => item.classList.remove("selected"));
+              button.classList.add("selected");
+              button.dataset.selected = String(answerIndex);
+            });
+          });
+
+          document.getElementById("submitFinalQuizBtn").addEventListener("click", () => {
+            const answers = [];
+            quizContent.querySelectorAll(".option.selected").forEach(button => {
+              answers.push({ q: Number(button.dataset.question), a: Number(button.dataset.answer) });
+            });
+
+            const score = finalQuestionSet.reduce((total, question, index) => {
+              const selected = answers.find(item => item.q === index);
+              return total + ((selected && selected.a === question.answer) ? 1 : 0);
+            }, 0);
+            const percent = Math.round((score / finalQuestionSet.length) * 100);
+            const xpReward = 50 + score * 20;
+            state.finalQuizScore = percent;
+            addXP(state, xpReward, "Final module quiz completed");
+            saveState(state);
+
+            const result = document.createElement("div");
+            result.className = "answer-panel correct";
+            result.innerHTML = `<strong>Final quiz complete!</strong><p>You scored ${score}/${finalQuestionSet.length} (${percent}%).</p><p>XP earned: +${xpReward}</p>`;
+            quizContent.appendChild(result);
+          });
+        }
+
+        renderLessons();
+        renderLessonContent();
+        updateModuleProgressUI();
+
+        const mobileToggle = document.querySelector(".mobile-menu-toggle");
+        const mainNav = document.getElementById("mainNav");
+        if (mobileToggle && mainNav) {
+          mobileToggle.addEventListener("click", () => {
+            const open = mainNav.classList.toggle("open");
+            mobileToggle.setAttribute("aria-expanded", String(open));
+          });
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          clearSession();
+          window.location.href = "login.html";
+        });
+      }
+    </script>
+  </body>
+</html>

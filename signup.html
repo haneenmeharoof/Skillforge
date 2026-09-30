@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Sign Up</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <div class="auth-layout">
+        <aside class="auth-brand">
+          <div class="brand-content">
+            <div class="brand-card">
+              <div class="logo" style="font-size: 1.7rem;">SkillForge</div>
+              <h1>Build Skills.<br />Master Your Future.</h1>
+              <p>An adaptive learning platform that builds personalized skill roadmaps based on your knowledge, performance and goals.</p>
+            </div>
+
+            <div class="brand-metrics">
+              <div class="mini">
+                <strong>6x</strong>
+                <span>Faster learning</span>
+              </div>
+              <div class="mini">
+                <strong>5+</strong>
+                <span>Domains</span>
+              </div>
+              <div class="mini">
+                <strong>AI</strong>
+                <span>Personalized plans</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <main class="auth-panel">
+          <div class="auth-panel-card">
+            <div class="auth-header">
+              <h2>Create Account</h2>
+              <p>Start your personalized learning journey.</p>
+            </div>
+
+            <form id="signupForm">
+              <div class="form-row">
+                <label for="fullName">Full Name</label>
+                <input id="fullName" type="text" placeholder="Jane Learner" required />
+              </div>
+
+              <div class="form-row">
+                <label for="signupEmail">Email</label>
+                <input id="signupEmail" type="email" placeholder="you@example.com" required />
+              </div>
+
+              <div class="form-row">
+                <label for="signupPassword">Password</label>
+                <input id="signupPassword" type="password" placeholder="Create a password" minlength="4" required />
+              </div>
+
+              <div class="form-row">
+                <label for="confirmPassword">Confirm Password</label>
+                <input id="confirmPassword" type="password" placeholder="Re-enter your password" minlength="4" required />
+              </div>
+
+              <button type="submit" class="btn block">Create Account</button>
+              <p id="signupMessage" class="message" role="alert"></p>
+            </form>
+
+            <div class="form-footer">
+              Already have an account? <a href="login.html">Login</a>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script>
+      const signupForm = document.getElementById("signupForm");
+      const signupMessage = document.getElementById("signupMessage");
+
+      signupForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const name = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("signupEmail").value.trim().toLowerCase();
+        const password = document.getElementById("signupPassword").value.trim();
+        const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+        if (!name || !email || !password) {
+          signupMessage.textContent = "Please fill in all fields.";
+          return;
+        }
+
+        if (password.length < 4) {
+          signupMessage.textContent = "Password must be at least 4 characters long.";
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          signupMessage.textContent = "Passwords do not match.";
+          return;
+        }
+
+        const existingUser = findUserByEmail(email);
+        if (existingUser) {
+          signupMessage.textContent = "An account already exists with this email. Please log in instead.";
+          return;
+        }
+
+        const users = getUsers();
+        users.push({ name, email, password });
+        saveUsers(users);
+
+        const currentState = getState();
+        const nextState = normalizeState(currentState);
+        nextState.user = { name, email, password, lastLogin: new Date().toISOString() };
+        logActivity(nextState, "Joined SkillForge");
+        saveState(nextState);
+        window.location.href = "select.html";
+      });
+    </script>
+  </body>
+</html>

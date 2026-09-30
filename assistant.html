@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | AI Assistant</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container app-layout" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+      <aside id="sidebar" class="sidebar"></aside>
+
+      <main class="main-panel">
+        <div class="panel-header">
+          <div>
+            <h1>SkillForge AI</h1>
+            <p class="subtitle">Your AI learning companion.</p>
+          </div>
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation">☰</button>
+        </div>
+
+        <section class="card soft chat-shell">
+          <div class="quick-prompts">
+            <button type="button" class="prompt-btn">What should I learn next?</button>
+            <button type="button" class="prompt-btn">Explain networking.</button>
+            <button type="button" class="prompt-btn">Why did I get this question wrong?</button>
+            <button type="button" class="prompt-btn">Give me a challenge.</button>
+          </div>
+
+          <div class="chat-window">
+            <div id="chatMessages" class="chat-messages">
+              <div class="chat-bubble ai">Hi! I’m your SkillForge AI assistant. What would you like to learn today?</div>
+            </div>
+            <div class="chat-input-row">
+              <input id="chatInput" type="text" placeholder="Ask SkillForge AI..." />
+              <button id="sendChat" class="btn">Send</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireDomain();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderSidebar();
+
+        const chatMessages = document.getElementById("chatMessages");
+        const chatInput = document.getElementById("chatInput");
+        const sendChat = document.getElementById("sendChat");
+
+        function addMessage(text, sender = "ai") {
+          const bubble = document.createElement("div");
+          bubble.className = `chat-bubble ${sender}`;
+          bubble.textContent = text;
+          chatMessages.appendChild(bubble);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getResponse(input) {
+          const lower = input.toLowerCase();
+          if (lower.includes("cyber mission") || lower.includes("start a cyber mission") || lower.includes("mission")) return "I can help you start a cyber mission. Try the Games & Missions page to tackle phishing detection, secure account tasks, and network investigations.";
+          if (lower.includes("give me a challenge") || lower.includes("challenge") || lower.includes("practice")) return AI_RESPONSES.challenge;
+          if (lower.includes("network") || lower.includes("ip") || lower.includes("dns") || lower.includes("protocol")) return AI_RESPONSES.networking;
+          if (lower.includes("skill gap") || lower.includes("weak") || lower.includes("gap")) return "Your best next move is to review the skill gap section and revisit the lowest scoring area. Focus on one concept, then test it with a short quiz.";
+          if (lower.includes("recommend") || lower.includes("lesson") || lower.includes("next")) return AI_RESPONSES.next;
+          if (lower.includes("wrong") || lower.includes("miss") || lower.includes("question")) return AI_RESPONSES.wrong;
+          if (lower.includes("quiz") || lower.includes("networking quiz")) return "Here is a quick networking check: what protocol translates a domain name into an IP address? The answer is DNS.";
+          return AI_RESPONSES.default;
+        }
+
+        function handlePrompt(text) {
+          addMessage(text, "user");
+          addMessage(getResponse(text));
+        }
+
+        sendChat.addEventListener("click", () => {
+          const value = chatInput.value.trim();
+          if (!value) return;
+          handlePrompt(value);
+          chatInput.value = "";
+        });
+
+        chatInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            sendChat.click();
+          }
+        });
+
+        document.querySelectorAll(".prompt-btn").forEach(button => {
+          button.addEventListener("click", () => {
+            handlePrompt(button.textContent.trim());
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

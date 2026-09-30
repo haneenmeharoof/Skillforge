@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Achievements</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container app-layout" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+      <aside id="sidebar" class="sidebar"></aside>
+
+      <main class="main-panel">
+        <div class="panel-header">
+          <div>
+            <h1>Achievements</h1>
+            <p class="subtitle">Track the milestones you have earned.</p>
+          </div>
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation">☰</button>
+        </div>
+
+        <section class="card soft">
+          <div id="badgeGrid" class="badge-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireDomain();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderSidebar();
+
+        const badgeGrid = document.getElementById("badgeGrid");
+        badgeGrid.innerHTML = BADGES.map((badge) => {
+          const unlocked = state.badges.includes(badge.id);
+          return `
+            <div class="badge-card ${unlocked ? "unlocked" : "locked"}">
+              <div style="font-size: 2.1rem; margin-bottom: 0.3rem;">${badge.icon}</div>
+              <h3>${badge.name}</h3>
+              <p class="muted sm">${badge.desc}</p>
+            </div>
+          `;
+        }).join("");
+      }
+    </script>
+  </body>
+</html>

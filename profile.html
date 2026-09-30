@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Profile</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container app-layout" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+      <aside id="sidebar" class="sidebar"></aside>
+
+      <main class="main-panel">
+        <div class="panel-header">
+          <div>
+            <h1>Profile</h1>
+            <p class="subtitle">Your progress, badges, and learning snapshot.</p>
+          </div>
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation">☰</button>
+        </div>
+
+        <section class="profile-grid">
+          <div class="profile-card">
+            <div class="profile-avatar" id="profileAvatar">SL</div>
+            <div class="profile-meta">
+              <h2 id="profileName">Student</h2>
+              <p id="profileEmail" class="muted">student@example.com</p>
+            </div>
+            <div class="profile-actions">
+              <button id="logoutBtn" class="btn secondary">Logout</button>
+              <button id="resetBtn" class="btn ghost">Reset Progress</button>
+            </div>
+          </div>
+
+          <div class="profile-card">
+            <div class="grid cols-2">
+              <div class="card soft">
+                <p class="muted sm">Selected Domain</p>
+                <h3 id="profileDomain">Cybersecurity</h3>
+              </div>
+              <div class="card soft">
+                <p class="muted sm">Level</p>
+                <h3 id="profileLevel">Level 1</h3>
+              </div>
+              <div class="card soft">
+                <p class="muted sm">XP</p>
+                <h3 id="profileXp">0 XP</h3>
+              </div>
+              <div class="card soft">
+                <p class="muted sm">Progress</p>
+                <h3 id="profileProgress">0%</h3>
+              </div>
+            </div>
+
+            <div class="card soft" style="margin-top: 1rem;">
+              <h3>Skills</h3>
+              <div id="profileSkills" class="quick-prompts" style="margin-top: 0.7rem;"></div>
+            </div>
+
+            <div class="card soft" style="margin-top: 1rem;">
+              <h3>Achievements</h3>
+              <div id="profileBadges" class="quick-prompts" style="margin-top: 0.7rem;"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireLogin();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderSidebar();
+
+        const domainName = getDomainLabel(state.domain || "cybersecurity");
+        const avatar = document.getElementById("profileAvatar");
+        const name = document.getElementById("profileName");
+        const email = document.getElementById("profileEmail");
+
+        avatar.textContent = getUserInitials(state.user.name);
+        name.textContent = state.user.name;
+        email.textContent = state.user.email;
+        document.getElementById("profileDomain").textContent = domainName;
+        document.getElementById("profileLevel").textContent = `Level ${levelInfo(state.xp).num}`;
+        document.getElementById("profileXp").textContent = `${state.xp} XP`;
+        document.getElementById("profileProgress").textContent = `${overallProgress(state)}%`;
+
+        const skillList = Object.keys(state.skillScores || {});
+        document.getElementById("profileSkills").innerHTML = skillList.length
+          ? skillList.map(skill => `<span class="badge good">${skill}</span>`).join("")
+          : `<span class="badge">No skills tracked yet</span>`;
+
+        document.getElementById("profileBadges").innerHTML = BADGES.map(badge => {
+          const unlocked = state.badges.includes(badge.id);
+          return `<span class="badge ${unlocked ? "good" : "warn"}">${badge.icon} ${badge.name}</span>`;
+        }).join("");
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          clearSession();
+          window.location.href = "login.html";
+        });
+
+        document.getElementById("resetBtn").addEventListener("click", () => {
+          const fresh = resetProgress();
+          if (fresh.user) window.location.reload();
+        });
+      }
+    </script>
+  </body>
+</html>

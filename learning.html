@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Learning</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="page-background">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a href="dashboard.html" class="logo" aria-label="SkillForge home">SkillForge</a>
+
+        <button class="mobile-menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav aria-label="Main navigation" class="main-nav" id="mainNav">
+          <ul class="nav-links">
+            <li><a href="dashboard.html">Home</a></li>
+            <li><a href="roadmap.html">Roadmap</a></li>
+            <li><a href="learning.html" class="active">Learn</a></li>
+            <li><a href="games.html">Games &amp; Missions</a></li>
+            <li><a href="challenges.html">Challenges</a></li>
+            <li><a href="skillgaps.html">Skill Gap</a></li>
+            <li><a href="achievements.html">Achievements</a></li>
+            <li><a href="assistant.html">AI Assistant</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="user-section">
+            <div id="topProfile"></div>
+            <button id="logoutBtn" class="btn secondary">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <div class="container">
+        <div class="panel-header">
+          <div>
+            <h1 id="learningTitle">Learning Hub</h1>
+            <p id="learningSubtitle" class="subtitle">5 guided modules for your selected domain.</p>
+          </div>
+          <a href="dashboard.html" class="btn secondary">Back to Dashboard</a>
+        </div>
+
+        <section class="premium-card hero-gradient blue-glow">
+          <div class="grid cols-2" style="align-items: center; margin: 0;">
+            <div>
+              <p class="muted sm" style="margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Current Domain</p>
+              <h2 id="domainTitle" style="margin-bottom: 0.3rem;">Cybersecurity</h2>
+              <p id="domainSummary" class="subtitle">Follow a structured path through the most important concepts.</p>
+            </div>
+            <div class="glass-card" style="padding: 1rem;">
+              <div class="module-progress">
+                <div style="display:flex; justify-content:space-between; gap:1rem; align-items:center;">
+                  <span class="muted sm">Progress</span>
+                  <strong id="learningProgressValue">0%</strong>
+                </div>
+                <div class="bar"><i id="learningProgressBar" data-w="0"></i></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div id="modulesGrid" class="module-hub-grid"></div>
+
+        <section class="premium-card final-task-card">
+          <div class="section-header" style="margin-bottom: 0.7rem;">
+            <h2>Final Practical Task</h2>
+          </div>
+          <div class="grid cols-2" style="align-items: center; margin: 0;">
+            <div>
+              <p id="finalTaskDescription" class="subtitle">Apply your domain knowledge in a realistic, practical task.</p>
+            </div>
+            <div style="text-align: right;">
+              <a href="module.html?module=5" class="btn">Open Final Task</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireDomain();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderTopProfile(state);
+        const domain = DOMAINS.find(item => item.id === state.domain) || DOMAINS[0];
+        const modules = getModulesForDomain(state.domain);
+        const modulesGrid = document.getElementById("modulesGrid");
+        const domainTitle = document.getElementById("domainTitle");
+        const domainSummary = document.getElementById("domainSummary");
+        const learningProgressValue = document.getElementById("learningProgressValue");
+        const learningProgressBar = document.getElementById("learningProgressBar");
+        const finalTaskDescription = document.getElementById("finalTaskDescription");
+
+        domainTitle.textContent = domain.name;
+        domainSummary.textContent = `Build a structured learning path in ${domain.name.toLowerCase()} with five guided modules.`;
+
+        const totalCompleted = modules.reduce((sum, module) => {
+          const moduleState = state.modules[String(module.id)] || { completed: false, lessonsCompleted: [] };
+          return sum + (moduleState.lessonsCompleted ? moduleState.lessonsCompleted.length : 0);
+        }, 0);
+
+        const totalLessons = modules.reduce((sum, module) => sum + module.lessons.length, 0);
+        const overallModuleProgress = totalLessons ? Math.round((totalCompleted / totalLessons) * 100) : 0;
+        learningProgressValue.textContent = `${overallModuleProgress}%`;
+        learningProgressBar.dataset.w = overallModuleProgress;
+
+        const finalTaskText = state.domain === "ai"
+          ? "Create a simple AI use case, explain the problem, outline a model or workflow, and propose a real-world value proposition."
+          : state.domain === "cybersecurity"
+            ? "Analyse a realistic security scenario, identify the critical risks, and propose a practical defense plan."
+            : state.domain === "webdev"
+              ? "Build a small front-end feature concept, define the user flow, and explain the implementation approach."
+              : state.domain === "datascience"
+                ? "Interpret a dataset, identify the key insight, and describe the decision or model you would use."
+                : state.domain === "cloud"
+                  ? "Design a resilient cloud architecture for a common workload and explain the key trade-offs."
+                  : "Prototype a product flow, then explain the user journey and interface decisions behind it.";
+
+        finalTaskDescription.textContent = finalTaskText;
+
+        modulesGrid.innerHTML = modules.map((module) => {
+          const moduleState = state.modules[String(module.id)] || { completed: false, lessonsCompleted: [] };
+          const lessonCount = module.lessons.length;
+          const completedCount = Array.isArray(moduleState.lessonsCompleted) ? moduleState.lessonsCompleted.length : 0;
+          const progress = Math.round((completedCount / lessonCount) * 100);
+          let statusText = "Start Module";
+          let statusClass = "start";
+
+          if (moduleState.completed || progress >= 100) {
+            statusText = "Completed";
+            statusClass = "complete";
+          } else if (completedCount > 0) {
+            statusText = "Continue";
+            statusClass = "inprogress";
+          }
+
+          return `
+            <a class="module-card-link" href="module.html?module=${module.id}">
+              <article class="module-card">
+                <div class="module-card-header">
+                  <span class="module-rank">Module ${module.id}</span>
+                  <span class="module-status ${statusClass}">${statusText}</span>
+                </div>
+                <h3>${module.title}</h3>
+                <p>${module.description}</p>
+                <div class="module-meta">
+                  <span class="badge">${module.lessons.length} lessons</span>
+                  <span class="badge">${progress}% progress</span>
+                </div>
+                <div class="bar"><i data-w="${progress}"></i></div>
+                <div class="module-card-footer">
+                  <span class="module-progress-label">${progress}% complete</span>
+                  <span class="btn">${statusText}</span>
+                </div>
+              </article>
+            </a>
+          `;
+        }).join("");
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          clearSession();
+          window.location.href = "login.html";
+        });
+
+        const mobileToggle = document.querySelector(".mobile-menu-toggle");
+        const mainNav = document.getElementById("mainNav");
+        if (mobileToggle && mainNav) {
+          mobileToggle.addEventListener("click", () => {
+            const isOpen = mainNav.classList.toggle("open");
+            mobileToggle.setAttribute("aria-expanded", String(isOpen));
+          });
+        }
+
+        animateBars();
+      }
+    </script>
+  </body>
+</html>

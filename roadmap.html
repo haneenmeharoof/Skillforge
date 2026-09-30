@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Roadmap</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container app-layout page-background" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+      <aside id="sidebar" class="sidebar"></aside>
+
+      <main class="main-panel">
+        <div class="panel-header">
+          <div>
+            <h1 id="roadmapTitle">Roadmap</h1>
+            <p id="roadmapSubtitle" class="subtitle">Your personalized learning journey</p>
+          </div>
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation">☰</button>
+        </div>
+
+        <section class="premium-card hero-gradient blue-glow" style="padding: 1.3rem; margin-bottom: 1rem;">
+          <div class="bar"><i id="roadmapBar" data-w="0"></i></div>
+          <p id="roadmapProgress" class="subtitle" style="margin-top: 0.8rem;">0% complete</p>
+        </section>
+
+        <div id="roadmapList" class="roadmap-grid" style="margin-top: 1.2rem;"></div>
+      </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireDomain();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderSidebar();
+
+        const roadmap = ROADMAPS[state.domain] || [];
+        const domain = DOMAINS.find(item => item.id === state.domain) || DOMAINS[0];
+        const percent = overallProgress(state);
+
+        document.getElementById("roadmapTitle").textContent = `${domain.name} Roadmap`;
+        document.getElementById("roadmapSubtitle").textContent = `Placed at ${state.level} level (${state.assessmentScore}% assessment)`;
+        document.getElementById("roadmapBar").dataset.w = percent;
+        document.getElementById("roadmapProgress").textContent = `${percent}% complete (${state.completed.length}/${roadmap.length} stages)`;
+
+        const roadmapList = document.getElementById("roadmapList");
+        roadmapList.innerHTML = roadmap.map((stage, index) => {
+          const status = stageStatus(state, index);
+          const dotText = status === "done" ? "✓" : status === "current" ? "→" : "🔒";
+          const action = status === "locked" ? "Locked" : status === "done" ? "Review" : "Continue";
+          const score = skillScore(state, stage.skill);
+          const skillLabel = skillStatus(score);
+
+          const moduleLink = status === "locked" ? "#" : `learning.html?module=${stage.id}`;
+          return `
+            <div class="roadmap-item ${status}">
+              <div class="roadmap-dot">${dotText}</div>
+              <div class="premium-card" style="padding: 1.1rem 1.2rem;">
+                <div class="muted sm">Stage ${index + 1}</div>
+                <h3>${stage.title}</h3>
+                <p class="muted sm">${stage.desc}</p>
+                <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin: 0.6rem 0;">
+                  <span class="badge">⏱ ${stage.time}</span>
+                  <span class="badge">${stage.level}</span>
+                  <span class="badge ${skillLabel.cls || "good"}">${stage.skill}: ${skillLabel.label}</span>
+                </div>
+                <a href="${moduleLink}" class="btn ${status === "locked" ? "secondary" : ""}" style="margin-top: 0.5rem; ${status === "locked" ? "pointer-events: none; opacity: 0.7;" : ""}">${action}</a>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        animateBars();
+      }
+    </script>
+  </body>
+</html>
+

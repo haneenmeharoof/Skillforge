@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Skill Gaps</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container app-layout" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+      <aside id="sidebar" class="sidebar"></aside>
+
+      <main class="main-panel">
+        <div class="panel-header">
+          <div>
+            <h1>Your Skill Gaps</h1>
+            <p class="subtitle">Focused feedback to help you improve faster.</p>
+          </div>
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation">☰</button>
+        </div>
+
+        <section class="card soft">
+          <div id="gapList" class="skill-gap-list"></div>
+        </section>
+
+        <section class="card soft" style="margin-top: 1.5rem;">
+          <div class="section-header" style="margin-bottom: 0.6rem;">
+            <h2>Recommended For You</h2>
+          </div>
+          <p id="recommendationText" class="subtitle">You need more practice with your strongest weak area.</p>
+          <div id="recommendedPanel" class="challenge-card" style="margin-top: 1rem; padding: 1.2rem; grid-template-columns: 1fr auto; align-items: center;">
+            <div>
+              <h3 id="recommendedStageTitle">Networking Fundamentals</h3>
+              <p id="recommendedStageMeta" class="muted sm">Module 3</p>
+            </div>
+            <a id="recommendedBtn" href="learning.html" class="btn">Start Recommended Lesson</a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireDomain();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderSidebar();
+
+        const gapList = document.getElementById("gapList");
+        const recommendationText = document.getElementById("recommendationText");
+        const recommendedStageTitle = document.getElementById("recommendedStageTitle");
+        const recommendedStageMeta = document.getElementById("recommendedStageMeta");
+        const recommendedBtn = document.getElementById("recommendedBtn");
+
+        const gaps = getSkillGapData(state);
+        gapList.innerHTML = gaps.map(item => `
+          <div>
+            <div class="skill-row">
+              <div>
+                <div class="meta">
+                  <strong>${item.skill}</strong>
+                  <span class="badge ${item.status.cls || "good"}">${item.status.label}</span>
+                </div>
+                <div class="bar"><i data-w="${item.score}"></i></div>
+              </div>
+              <strong>${item.score}%</strong>
+            </div>
+          </div>
+        `).join("");
+
+        const recommendation = recommendedStage(state);
+        if (recommendation && recommendation.stage) {
+          recommendationText.textContent = `You need more practice with ${recommendation.skill}.`;
+          recommendedStageTitle.textContent = recommendation.stage.title;
+          const stageIndex = (ROADMAPS[state.domain] || []).findIndex(item => item.id === recommendation.stage.id) + 1;
+          recommendedStageMeta.textContent = `Recommended: ${recommendation.skill} — Module ${stageIndex}`;
+          recommendedBtn.href = `learning.html?module=${recommendation.stage.id}`;
+        } else {
+          recommendationText.textContent = "Your skill profile looks strong. Keep building momentum with the next roadmap step.";
+          recommendedStageTitle.textContent = "Keep learning";
+          recommendedStageMeta.textContent = "You are in good shape.";
+          recommendedBtn.href = "roadmap.html";
+        }
+
+        animateBars();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Daily Challenge</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container app-layout" style="padding-top: 1.5rem; padding-bottom: 3rem;">
+      <aside id="sidebar" class="sidebar"></aside>
+
+      <main class="main-panel">
+        <div class="panel-header">
+          <div>
+            <h1>Daily Challenge</h1>
+            <p class="subtitle">Sharpen your instincts and build confidence with real-world scenarios.</p>
+          </div>
+          <button class="mobile-toggle" id="mobileToggle" aria-label="Open navigation">☰</button>
+        </div>
+
+        <section class="card soft">
+          <div class="challenge-card" style="padding: 1.3rem; align-items: start;">
+            <div>
+              <p class="muted sm">Scenario</p>
+              <h2 id="challengeScenario" style="margin-bottom: 1rem;">Challenge scenario</h2>
+            </div>
+            <div class="badge good">+50 XP</div>
+          </div>
+
+          <div class="challenge-card" style="padding: 1.2rem; margin-top: 1rem;">
+            <div>
+              <h3 id="challengeQuestion">Question</h3>
+              <div id="challengeOptions" class="option-list"></div>
+              <button id="submitChallenge" class="btn" style="margin-top: 1rem;">Submit Answer</button>
+            </div>
+            <div>
+              <div class="card" style="padding: 1rem; border-radius: 18px;">
+                <p class="muted sm">Difficulty: Medium</p>
+                <p class="muted sm">Focus: Threat recognition</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="challengeResult" class="answer-panel" hidden></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script src="ui.js"></script>
+    <script>
+      const state = requireDomain();
+      if (!state) {
+        window.location.href = "login.html";
+      } else {
+        renderSidebar();
+
+        const challenge = { ...DAILY_CHALLENGE };
+        const challengeScenario = document.getElementById("challengeScenario");
+        const challengeQuestion = document.getElementById("challengeQuestion");
+        const challengeOptions = document.getElementById("challengeOptions");
+        const challengeResult = document.getElementById("challengeResult");
+        const submitChallenge = document.getElementById("submitChallenge");
+
+        challengeScenario.textContent = challenge.scenario;
+        challengeQuestion.textContent = challenge.question;
+        challengeOptions.innerHTML = challenge.options.map((option, index) => `
+          <button type="button" class="option" data-index="${index}">${option}</button>
+        `).join("");
+
+        let selected = null;
+        Array.from(document.querySelectorAll(".option")).forEach(button => {
+          button.addEventListener("click", () => {
+            document.querySelectorAll(".option").forEach(item => item.classList.remove("selected"));
+            button.classList.add("selected");
+            selected = Number(button.dataset.index);
+          });
+        });
+
+        submitChallenge.addEventListener("click", () => {
+          if (selected === null) {
+            challengeResult.hidden = false;
+            challengeResult.className = "answer-panel incorrect";
+            challengeResult.innerHTML = "Please select an answer before submitting.";
+            return;
+          }
+
+          const isCorrect = selected === challenge.correctIndex;
+          const current = getState();
+          setSkillScore(current, challenge.skill, "challenge", isCorrect ? 100 : 45);
+          const xpGain = isCorrect ? 50 : 10;
+          awardChallengeResult(current, isCorrect, xpGain);
+          saveState(current);
+
+          challengeResult.hidden = false;
+          challengeResult.className = `answer-panel ${isCorrect ? "correct" : "incorrect"}`;
+          challengeResult.innerHTML = `
+            <strong>${isCorrect ? "Correct!" : "Not quite."}</strong>
+            <p>${challenge.explanation}</p>
+            <p><strong>XP awarded:</strong> +${xpGain}</p>
+          `;
+        });
+      }
+    </script>
+  </body>
+</html>

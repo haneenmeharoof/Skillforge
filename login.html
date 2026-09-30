@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillForge | Login</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <div class="auth-layout">
+        <aside class="auth-brand">
+          <div class="brand-content">
+            <div class="brand-card">
+              <div class="logo" style="font-size: 1.7rem;">SkillForge</div>
+              <h1>Build Skills.<br />Master Your Future.</h1>
+              <p>An adaptive learning platform that builds personalized skill roadmaps based on your knowledge, performance and goals.</p>
+            </div>
+
+            <div class="brand-metrics">
+              <div class="mini">
+                <strong>68%</strong>
+                <span>Avg. progress</span>
+              </div>
+              <div class="mini">
+                <strong>12k+</strong>
+                <span>Skill paths</span>
+              </div>
+              <div class="mini">
+                <strong>AI</strong>
+                <span>Guided coaching</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <main class="auth-panel">
+          <div class="auth-panel-card">
+            <div class="auth-header">
+              <h2>Welcome Back</h2>
+              <p>Continue your learning journey.</p>
+            </div>
+
+            <form id="loginForm">
+              <div class="form-row">
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="you@example.com" required />
+              </div>
+
+              <div class="form-row">
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Enter your password" required />
+              </div>
+
+              <div class="form-meta">
+                <label class="checkbox-row">
+                  <input type="checkbox" checked />
+                  <span>Remember me</span>
+                </label>
+                <a href="#" class="muted">Forgot Password?</a>
+              </div>
+
+              <button type="submit" class="btn block">Login</button>
+              <p id="loginMessage" class="message" role="alert"></p>
+            </form>
+
+            <div class="form-footer">
+              Don’t have an account? <a href="signup.html">Sign Up</a>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="store.js"></script>
+    <script>
+      const loginForm = document.getElementById("loginForm");
+      const loginMessage = document.getElementById("loginMessage");
+
+      loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const password = document.getElementById("password").value.trim();
+
+        if (!email || !password) {
+          loginMessage.textContent = "Please enter both your email and password.";
+          return;
+        }
+
+        const user = findUserByEmail(email);
+
+        if (!user || user.password !== password) {
+          loginMessage.textContent = "We couldn’t find that account. Please sign up first or check your details.";
+          return;
+        }
+
+        const state = getState();
+        state.user = { ...user, lastLogin: new Date().toISOString() };
+        saveState(state);
+        window.location.href = state.domain ? "dashboard.html" : "select.html";
+      });
+    </script>
+  </body>
+</html>
+
